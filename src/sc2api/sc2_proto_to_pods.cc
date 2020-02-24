@@ -149,9 +149,11 @@ bool Convert(const SC2APIProtocol::Alliance& alliance_proto, Unit::Alliance& all
 
 bool Convert(const SC2APIProtocol::CloakState& cloak_proto, Unit::CloakState& cloak) {
     switch (cloak_proto) {
+        case SC2APIProtocol::CloakState::CloakedUnknown:  cloak = Unit::Unknown; return true;
         case SC2APIProtocol::CloakState::Cloaked:         cloak = Unit::Cloaked; return true;
         case SC2APIProtocol::CloakState::CloakedDetected: cloak = Unit::CloakedDetected; return true;
         case SC2APIProtocol::CloakState::NotCloaked:      cloak = Unit::NotCloaked; return true;
+        case SC2APIProtocol::CloakState::CloakedAllied:   cloak = Unit::CloakedAllied; return true;
     }
     return false;
 }
@@ -183,13 +185,8 @@ bool Convert(const ObservationRawPtr& observation_raw, UnitPool& unit_pool, uint
         unit->facing = observation_unit.facing();
         unit->radius = observation_unit.radius();
         unit->build_progress = observation_unit.build_progress();
-        if (observation_unit.has_cloak()) {
-            if (!Convert(observation_unit.cloak(), unit->cloak)) {
-                return false;
-            }
-        }
-        else {
-            unit->cloak = Unit::Unknown;
+        if (!Convert(observation_unit.cloak(), unit->cloak)) {
+            return false;
         }
 
         unit->detect_range = observation_unit.detect_range();
