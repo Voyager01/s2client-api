@@ -100,7 +100,9 @@ public:
         //! No cloaking.
         NotCloaked = 3,
         //! Could not determine cloaking state.
-        Unknown = 4
+        Unknown = 4，
+        //!
+        CloakedAllied = 5
     };
 
     //! If the unit is shown on screen or not.
